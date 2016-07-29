@@ -22,7 +22,7 @@ import paperplane.android.me.aars.paperplane.Utilities.Rectangle;
  */
 public class Plane extends Component2D {
 
-    private static final int HITBOX_DETAIL_LEVEL = 6;
+    private static final int HITBOX_DETAIL_LEVEL = 3;
     private GameView gameView;
 
     private Figure hitbox;
@@ -98,6 +98,7 @@ public class Plane extends Component2D {
 
         plane_image.draw(c);
         shield_image.draw(c);
+        hitbox.draw(c);
     }
 
     public void setSpeed(float speed) {
@@ -107,7 +108,7 @@ public class Plane extends Component2D {
     private void setSpeed(float speed, float rot) {
         xSpeed = speed * (rot/100F);
         ySpeed = speed - Math.abs(xSpeed);
-        rotation_speed = speed/4 + (40/speed);
+        rotation_speed = speed/4 + (30/speed);
     }
 
     private void setRotation(float r) {
@@ -151,6 +152,7 @@ public class Plane extends Component2D {
     }
 
     public void update() {
+
         if(x_pressed != -1) {
 
             if (x_pressed < C_WIDTH / 2) {
@@ -174,7 +176,7 @@ public class Plane extends Component2D {
             setRotation(rotation);
         }
 
-        updateHitbox();
+       updateHitbox();
 
         setX((int) (x + (xSpeed * gameView.ratio)));
     }

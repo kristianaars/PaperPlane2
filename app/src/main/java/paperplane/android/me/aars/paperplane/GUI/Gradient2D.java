@@ -36,7 +36,6 @@ public class Gradient2D extends Component2D {
         this.type = type;
 
         paint = new Paint();
-        paint.setDither(true);
 
         createGradient();
     }

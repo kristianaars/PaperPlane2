@@ -20,10 +20,12 @@ public class GameLoop extends Thread {
     public long tick = 0;
     public int fps = 0;
 
-    public GameLoop(GameView v, SurfaceHolder s, int period) {
+    public int frames;
+
+    public GameLoop(GameView v, SurfaceHolder surfaceHolder, int period) {
+        this.surfaceHolder = surfaceHolder;
         this.period = period;
         view = v;
-        surfaceHolder = s;
     }
 
     public void start() {
@@ -39,7 +41,6 @@ public class GameLoop extends Thread {
 
     @Override
     public void run() {
-        int frames = 0;
         double unprocessedSeconds = 0;
         long previousTime = System.nanoTime();
         double secondsPerTick = period/1000F;
@@ -67,6 +68,8 @@ public class GameLoop extends Thread {
                 }
             }
 
+
+
             c = null;
             try {
                 c = surfaceHolder.lockCanvas();
@@ -82,8 +85,10 @@ public class GameLoop extends Thread {
             } finally {
                 if(c != null) {
                     surfaceHolder.unlockCanvasAndPost(c);
+                    view.postInvalidate();
                 }
             }
+
         }
     }
 }

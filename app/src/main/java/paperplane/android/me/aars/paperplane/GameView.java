@@ -5,14 +5,17 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.opengl.GLSurfaceView;
+import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 
 import paperplane.android.me.aars.paperplane.Managers.GameStateManager;
 
-public class GameView extends SurfaceView implements SurfaceHolder.Callback {
+public class GameView extends GLSurfaceView implements SurfaceHolder.Callback {
 
     private GameLoop thread;
     private GameStateManager gameStateManager;
@@ -50,23 +53,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     Paint p = new Paint();
 
-    public void render(Canvas c) {
-        gameStateManager.draw(c);
-
-        //c.drawText("PAPER PLANE ALPHA V 5    Fps: " + thread.fps, 0, 60, p);
-    }
     public void update() {
         gameStateManager.update();
     }
 
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        thread = new GameLoop(this, getHolder(), 16);
-        thread.start();
-
+    public void render(Canvas c) {
+        gameStateManager.draw(c);
+        c.drawText("Paper Plane 2 Alpha 5   FPS: " + thread.fps, 0, 60, p);
     }
 
-
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        thread = new GameLoop(this, holder, 16);
+        //thread.start();
+    }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
@@ -98,5 +98,4 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public GameActivity getGameActivity() {
         return gameActivity;
     }
-
 }

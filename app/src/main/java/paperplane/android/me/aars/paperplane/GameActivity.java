@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.PixelFormat;
 import android.media.AudioManager;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v4.view.accessibility.AccessibilityNodeInfoCompat;
 import android.view.Display;
@@ -21,6 +22,8 @@ import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.games.Games;
 import com.google.example.games.basegameutils.BaseGameUtils;
+
+import paperplane.android.me.aars.paperplane.OpenGLES.Renderer;
 
 public class GameActivity extends Activity implements ConnectionCallbacks, OnConnectionFailedListener {
     private static int RC_SIGN_IN = 0;
@@ -47,8 +50,6 @@ public class GameActivity extends Activity implements ConnectionCallbacks, OnCon
         super.onCreate(savedInstanceState);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        getWindow().setFormat(PixelFormat.RGBA_8888);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_DITHER, WindowManager.LayoutParams.FLAG_DITHER);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -62,6 +63,9 @@ public class GameActivity extends Activity implements ConnectionCallbacks, OnCon
         int height = display.getHeight();
 
         g = new GameView(this, width, height);
+
+        Renderer r = new Renderer();
+        g.setRenderer(r);
 
         setContentView(g);
     }

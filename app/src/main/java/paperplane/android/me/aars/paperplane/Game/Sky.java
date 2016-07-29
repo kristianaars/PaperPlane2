@@ -2,9 +2,7 @@ package paperplane.android.me.aars.paperplane.Game;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
-import android.graphics.Shader;
 
 import paperplane.android.me.aars.paperplane.GUI.Component2D;
 import paperplane.android.me.aars.paperplane.GUI.Gradient2D;
@@ -28,6 +26,10 @@ public class Sky extends Component2D {
     private int SKY_HEIGHT;
     private int SKY_COLOR =  0xfff79267; //A5D9D7;
 
+    private int gradientYEnd;
+    private int gradientYStart;
+    private int gradientHeight;
+
     private static Bitmap SKY_BITMAP;
     private Gradient2D gradient;
 
@@ -48,37 +50,49 @@ public class Sky extends Component2D {
     private int tmpY = 0;
     private int b = 0;
 
+    private boolean ticked = false;
+
     @Override
     public void draw(Canvas c) {
-        p.setColor(SKY_COLOR);
-        c.drawRect(0, 0, gameView.width, gameView.height, p);
+            p.setColor(SKY_COLOR);
+            c.drawRect(0, 0, gameView.width, gameView.height, p);
 
-        tmpY = (int) offset;
+            tmpY = (int) offset;
 
-        for(int i = 0; i < b; i++) {
-            c.drawBitmap(SKY_BITMAP, x, tmpY, p);
-            c.drawBitmap(SKY_BITMAP, x - SKY_BITMAP.getWidth(), tmpY, p);
-            tmpY += SKY_HEIGHT;
-        }
+            for(int i = 0; i < b; i++) {
+                c.drawBitmap(SKY_BITMAP, x, tmpY, p);
+                c.drawBitmap(SKY_BITMAP, x - SKY_BITMAP.getWidth(), tmpY, p);
+                tmpY += SKY_HEIGHT;
+            }
 
-        gradient.draw(c);
+            p.setColor(0xffbb8cbf);
+            c.drawRect(0, gradientYEnd, gameView.width, gradientYEnd + gradientHeight, p);
+            gradient.draw(c);
     }
 
     @Override
     public void update() {
-        int yDiff = (int) (y - lastYReset);
+        if(!ticked) {
+            int yDiff = (int) (y - lastYReset);
 
-        if(yDiff > SKY_HEIGHT) {
-            lastYReset = y;
+            if(yDiff > SKY_HEIGHT) {
+                lastYReset = y;
+            }
+
+            offset = (int) (y - lastYReset) * -1;
+
+            x += 1;
+
+            if(x >= SKY_BITMAP.getWidth()) {
+                x = 0;
+            }
+
+            ticked = true;
+        } else {
+            ticked = false;
         }
 
-        offset = (int) (y - lastYReset) * -1;
 
-        x += 1;
-
-        if(x >= SKY_BITMAP.getWidth()) {
-            x = 0;
-        }
     }
 
     private void loadBitmap() {
@@ -89,8 +103,13 @@ public class Sky extends Component2D {
     }
 
     private void loadGradient() {
-        gradient = new Gradient2D(gameView.width/2, (int) (gameView.height*0.60f), gameView.width/2, (int) 0, 0xffbb8cbf, 0x00f79266, Gradient2D.GRADIENT_LINEAR);
-        gradient.setBounds(gameView.width, gameView.height);
+        gradientYEnd = (int) (gameView.height * 0.6F);
+        gradientYStart = 0;
+
+        gradientHeight = gradientYEnd - gradientYStart;
+
+        gradient = new Gradient2D(gameView.width/2, gradientYEnd, gameView.width/2, gradientYStart, 0xffbb8cbf, 0x0fbb8cbf, Gradient2D.GRADIENT_LINEAR);
+        gradient.setBounds(gameView.width, gradientHeight);
     }
 
     public void setGameY(double y) {
